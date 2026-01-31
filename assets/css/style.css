@@ -4,15 +4,15 @@
   right: 20px;
   width: 60px;
   height: 60px;
-  background: #ffffff;
-  border: 2px solid #1D73BE;
+  background: var(--background-color);
+  border: 2px solid var(--primary-color);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  transition: transform 0.3s ease-in-out; 
+  transition: transform 0.3s ease-in-out;
 }
 
 #ai-chat-button:active {

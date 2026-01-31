@@ -1,0 +1,16 @@
+:root {
+  --primary-color: #1d73be;
+  --background-color: white;
+  --foreground-color: black;
+
+  --error-foreground-color: #e24428;
+  --error-background-color: #fde7d3;
+
+  --color-gray-500: #71717a;
+  --color-gray-300: #d4d4d8;
+  --color-gray-200: #e4e4e7;
+  --color-gray-100: #f4f4f5;
+  --color-gray-50: #fafafa;
+
+  --color-success: #20c153;
+}
