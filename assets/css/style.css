@@ -4,7 +4,7 @@
   right: 20px;
   width: 60px;
   height: 60px;
-  background: #1D73BE30;
+  background: #ffffff;
   border: 2px solid #1D73BE;
   border-radius: 50%;
   cursor: pointer;
@@ -12,6 +12,11 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  transition: transform 0.3s ease-in-out; 
+}
+
+#ai-chat-button:active {
+  transform: scale(0.8);
 }
 
 #ai-chat-button img {
