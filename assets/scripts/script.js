@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
   // Bây giờ bạn có thể dùng dấu $ thoải mái bên trong khối này
+  
 
   const $windowChat = $("#ai-chat-window");
 

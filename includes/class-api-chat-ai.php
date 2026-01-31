@@ -11,7 +11,7 @@ class API_Chat_AI
         ));
     }
 
-    public static function handle_send_message($request)
+    public static function handle_send_message($request): WP_Error
     {
         $params = $request->get_params();
 
@@ -25,10 +25,7 @@ class API_Chat_AI
         // Thực hiện logic lưu DB và gọi AI ở đây...
         // $reply = MyAIHelper::get_response($message);
 
-        return new WP_REST_Response([
-            'status' => 'error',
-            'message' => 'Đã có lỗi xảy ra khi gọi AI.',
-        ], 500);
+        return new WP_Error('no_message', 'Tin nhắn không được để trống', ['status' => 400]);
 
         return new WP_REST_Response([
             'status' => 'error',
