@@ -16,14 +16,38 @@ jQuery(document).ready(function ($) {
       // Cuộn xuống đáy khung chat
       $chatContent.scrollTop($chatContent[0].scrollHeight);
 
-      // Giả lập AI trả lời (Sau này sẽ thay bằng gọi API thật)
-      setTimeout(function () {
-        $chatContent.append(
-          `<div class="message ai-msg">
-            <div class="msg-bubble">Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?</div>
-        </div>`,
-        );
-      }, 500);
+      $.ajax({
+        url: aiChatSettings.root + "ai-chat/v1/send-message",
+        method: "POST",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-WP-Nonce", aiChatSettings.nonce);
+        },
+        data: {
+          message: message,
+          session_id: "1",
+        },
+        success: function (response) {
+          if (response.status === "success") {
+            $chatContent.append(
+              `<div class="message ai-msg">
+                  <div class="msg-bubble">${response?.data}</div>
+              </div>`,
+            );
+          }
+        },
+        error: function (error) {
+          $chatContent.append(
+            `<div class="message ai-msg">
+                  <div class="msg-bubble msg-error">${error.responseJSON.message || "Đã có lỗi xảy ra"}</div>
+              </div>`,
+          );
+        },
+
+        complete: function () {
+          // Cuộn xuống đáy khung chat
+          $chatContent.scrollTop($chatContent[0].scrollHeight);
+        },
+      });
     }
   });
 

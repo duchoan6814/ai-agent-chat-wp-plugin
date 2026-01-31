@@ -9,6 +9,7 @@
  */
 
 
+require_once plugin_dir_path(__FILE__) . 'includes/class-api-chat-ai.php';
 
 
 add_action('wp_footer', 'ai_chat_render_html');
@@ -37,6 +38,12 @@ function ai_chat_enqueue_assets()
     wp_enqueue_style('ai-chat-chat-box-style', plugins_url('assets/css/chat-box.css', __FILE__));
     wp_enqueue_script('ai-chat-script', plugins_url('assets/scripts/script.js', __FILE__), array('jquery'), '1.0', true);
     wp_enqueue_script('ai-chat-chat-box-script', plugins_url('assets/scripts/chat-box.js', __FILE__), array('jquery'), '1.0', true);
+
+    // Truyền biến vào Javascript
+    wp_localize_script('ai-chat-script', 'aiChatSettings', array(
+        'root' => esc_url_raw(rest_url()), // URL gốc của REST API
+        'nonce' => wp_create_nonce('wp_rest') // Mã bảo mật để WP cho phép gọi API
+    ));
 }
 
 
@@ -72,3 +79,5 @@ function ai_chat_create_table()
     dbDelta($sql_sessions);
     dbDelta($sql_messages);
 }
+
+add_action('rest_api_init', ['API_Chat_AI', 'register_routes']);

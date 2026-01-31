@@ -85,6 +85,11 @@
   border-bottom-left-radius: 2px;
 }
 
+.ai-msg .msg-bubble.msg-error {
+  color: #E24428;
+  background-color: #fde7d3;
+}
+
 .user-msg .msg-bubble {
   background: #007bff;
   color: white;
