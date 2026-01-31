@@ -73,6 +73,11 @@
   line-height: 1.4;
 }
 
+.message {
+  display: flex;
+  flex-direction: column;
+}
+
 .ai-msg .msg-bubble {
   background: #e9ecef;
   color: #333;
