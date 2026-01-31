@@ -1,0 +1,20 @@
+#ai-chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: #1D73BE30;
+  border: 2px solid #1D73BE;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#ai-chat-button img {
+  width: 30px;
+  height: 30px;
+}
