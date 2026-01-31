@@ -38,3 +38,37 @@ function ai_chat_enqueue_assets()
     wp_enqueue_script('ai-chat-script', plugins_url('assets/scripts/script.js', __FILE__), array('jquery'), '1.0', true);
     wp_enqueue_script('ai-chat-chat-box-script', plugins_url('assets/scripts/chat-box.js', __FILE__), array('jquery'), '1.0', true);
 }
+
+
+register_activation_hook(__FILE__, 'ai_chat_create_table');
+function ai_chat_create_table()
+{
+    global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
+
+    // 1. Bảng Session (Cuộc hội thoại)
+    $table_sessions = $wpdb->prefix . 'ai_chat_sessions';
+    $sql_sessions = "CREATE TABLE $table_sessions (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        title varchar(255) DEFAULT 'Cuộc trò chuyện mới',
+        user_id bigint(20) DEFAULT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    // 2. Bảng Messages (Chi tiết tin nhắn)
+    $table_messages = $wpdb->prefix . 'ai_chat_messages';
+    $sql_messages = "CREATE TABLE $table_messages (
+        id bigint(20) NOT NULL AUTO_INCREMENT,
+        session_id bigint(20) NOT NULL, -- Khóa ngoại liên kết với bảng Session
+        role varchar(20) NOT NULL,      -- 'user' hoặc 'assistant'
+        content text NOT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        PRIMARY KEY  (id),
+        KEY session_id (session_id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql_sessions);
+    dbDelta($sql_messages);
+}
