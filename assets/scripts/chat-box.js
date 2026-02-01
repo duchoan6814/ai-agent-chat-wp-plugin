@@ -37,6 +37,15 @@ jQuery(document).ready(function ($) {
           throw new Error("Không thể gửi tin nhắn!");
         }
 
+        const sessionIdFromServer = response.headers.get("X-Chat-Session-Id");
+        // Cập nhật sessionId nếu server trả về
+        if (sessionIdFromServer && !window.AIChatPlugin.currentSessionId) {
+          window.AIChatPlugin.currentSessionId = parseInt(sessionIdFromServer);
+          console.log(
+            "Đã thiết lập Session ID từ server:",
+            window.AIChatPlugin.currentSessionId,
+          );
+        }
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
