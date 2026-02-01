@@ -42,6 +42,28 @@
   font-weight: 600;
   font-size: 16px;
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.create-session-btn {
+  background: transparent;
+  border: none;
+  color: var(--background-color);
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-session-btn:hover {
+  opacity: 1;
+}
+
 .close-btn {
   background: transparent;
   border: none;

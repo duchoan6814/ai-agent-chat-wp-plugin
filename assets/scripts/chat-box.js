@@ -89,4 +89,11 @@ jQuery(document).ready(function ($) {
   $("#close-chat").on("click", function () {
     $windowChat.fadeOut(300);
   });
+
+  $("#create-new-session").on("click", function () {
+    // Đặt lại sessionId về 0 để tạo session mới khi gửi tin nhắn tiếp theo
+    window.AIChatPlugin.currentSessionId = 0;
+    // Xóa toàn bộ nội dung chat hiện tại
+    $chatContent.empty();
+  });
 });
