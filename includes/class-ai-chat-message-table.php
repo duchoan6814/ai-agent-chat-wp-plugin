@@ -4,7 +4,7 @@ if (!class_exists("WP_List_Table")) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-class AI_Chat_Session_Table extends WP_List_Table
+class AI_Chat_Message_Table extends WP_List_Table
 {
 
     function __construct()
@@ -20,10 +20,8 @@ class AI_Chat_Session_Table extends WP_List_Table
     public function get_columns()
     {
         return [
-            'cb' => '<input type="checkbox" />',
-            "title" => "Tiêu đề",
-            "visitor_fingerprint" => "Fingerprint",
-            "is_active" => "Trạng thái",
+            "role" => "Vai trò",
+            "content" => "Nội dung",
             "created_at" => "Thời gian"
         ];
     }
@@ -32,20 +30,10 @@ class AI_Chat_Session_Table extends WP_List_Table
     protected function get_sortable_columns()
     {
         return [
-            'id' => ['id', true],
             'created_at' => ['created_at', false],
         ];
     }
 
-    // Định nghĩa các bulk actions
-    protected function get_bulk_actions()
-    {
-        return [
-            // 'bulk-delete' => 'Xóa',
-            // 'bulk-activate' => 'Kích hoạt',
-            'bulk-deactivate' => 'Vô hiệu hóa',
-        ];
-    }
 
     // Cột hiển thị dữ liệu mặc định
     public function column_default($item, $column_name)
@@ -59,40 +47,12 @@ class AI_Chat_Session_Table extends WP_List_Table
         return sprintf('<input type="checkbox" name="bulk-delete[]" value="%s" />', $item->id);
     }
 
-    // Tùy biến hiển thị cho cột Tiêu đề (Click để xem chi tiết)
-    public function column_title($item)
-    {
-        // Lấy tất cả params hiện tại để giữ lại khi quay về
-        $current_params = array_filter($_GET, function($key) {
-            return in_array($key, ['orderby', 'order', 'paged', 's']);
-        }, ARRAY_FILTER_USE_KEY);
-        
-        $url = add_query_arg(
-            array_merge(
-                ['page' => 'ai-chat-details', 'id' => $item->id],
-                ['back_params' => urlencode(http_build_query($current_params))]
-            ),
-            admin_url('admin.php')
-        );
-        return sprintf('<strong><a href="%s">%s</a></strong>', esc_url($url), esc_html($item->title));
-    }
-
-    // Tùy biến hiển thị cho cột Trạng thái (Checkbox/Switch)
-    public function column_is_active($item)
-    {
-        $checked = $item->is_active ? 'checked' : '';
-        return sprintf(
-            '<input type="checkbox" onclick="return false;" class="toggle-active" data-id="%d" %s>',
-            $item->id,
-            $checked
-        );
-    }
 
     // Chuẩn bị dữ liệu cho bảng
     public function prepare_items()
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ai_chat_sessions';
+        $table_name = $wpdb->prefix . 'ai_chat_messages';
 
         // Xử lý Sắp xếp
         $orderby = !empty($_GET['orderby']) ? sanitize_sql_orderby($_GET['orderby']) : 'id';
@@ -103,10 +63,13 @@ class AI_Chat_Session_Table extends WP_List_Table
         $current_page = $this->get_pagenum();
         $offset = ($current_page - 1) * $per_page;
 
+        $session_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
         // Truy vấn dữ liệu
-        $total_items = $wpdb->get_var("SELECT COUNT(id) FROM $table_name");
+        $total_items = $wpdb->get_var($wpdb->prepare("SELECT COUNT(id) FROM $table_name WHERE session_id = %d", $session_id));
         $this->items = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $table_name ORDER BY $orderby $order LIMIT %d OFFSET %d",
+            "SELECT * FROM $table_name WHERE session_id = %d ORDER BY $orderby $order LIMIT %d OFFSET %d",
+            $session_id,
             $per_page,
             $offset
         ));

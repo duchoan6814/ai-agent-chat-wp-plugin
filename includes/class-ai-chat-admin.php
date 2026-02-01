@@ -30,6 +30,16 @@ class AIChat_Admin
             array($this, 'ai_chat_render_main_page')
         );
 
+        // Sửa tên menu con đầu tiên (trùng slug với menu cha)
+        add_submenu_page(
+            null,
+            'Chi tiết hội thoại',
+            'Chi tiết hội thoại',
+            'manage_options',
+            'ai-chat-details', // Trùng slug với cha
+            array($this, 'ai_chat_render_detail_page')
+        );
+
 
         // 3. Tạo Submenu: Cấu hình (Settings)
         add_submenu_page(
@@ -62,6 +72,36 @@ class AIChat_Admin
         </div>
         <?php
 
+    }
+
+    public function ai_chat_render_detail_page()
+    {
+        require_once plugin_dir_path(__FILE__) . 'class-ai-chat-message-table.php';
+
+        $myListTable = new AI_Chat_Message_Table();
+        $myListTable->prepare_items();
+
+
+        ?>
+        <div class="wrap">
+            <?php
+            // Lấy params từ URL để quay lại trang trước với đúng filter
+            $back_url = admin_url('admin.php?page=ai-chat-main');
+            if (isset($_GET['back_params'])) {
+                $back_params = urldecode($_GET['back_params']);
+                $back_url = admin_url('admin.php?page=ai-chat-main&' . $back_params);
+            }
+            ?>
+            <a href="<?php echo esc_url($back_url); ?>" class="page-title-action">&larr; Quay lại</a>
+            <h1 class="wp-heading-inline">Chi tiết hội thoại</h1>
+
+            <form method="post">
+                <?php
+                $myListTable->display(); // Hiển thị bảng
+                ?>
+            </form>
+        </div>
+        <?php
     }
 
 
