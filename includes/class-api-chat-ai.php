@@ -42,23 +42,57 @@ class API_Chat_AI
         save_ai_chat_message($session_id, 'user', $message);
 
 
-        // TODO: Thực hiện stream gọi AI ở đây và nhận phản hồi
+        // 3. Cấu hình Headers cho Stream
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no'); // Tắt buffer cho Nginx
+        header("X-Chat-Session-Id: $session_id"); // Gửi Session ID qua header
+        header('Access-Control-Expose-Headers: X-Chat-Session-Id');
 
-        // TODO: Save AI response to DB
-        save_ai_chat_message($session_id, 'assistant', 'AI trả lời: ' . $message);
+        // 4. Lấy cấu hình FastAPI
+        $settings = get_option('ai_chat_settings');
+        $api_url = rtrim($settings['ai_service_url'], '/') . '/api/chat';
+        $token = $settings['permanent_access_token'];
 
-        $response = new WP_REST_Response([
-            'status' => 'success',
-            'data' => 'AI trả lời: ' . $message,
-        ], 200);
+        // 5. Gọi FastAPI bằng cURL Stream
+        $full_ai_response = "";
+        $ch = curl_init($api_url);
 
-        // CHÈN SESSION ID VÀO HEADER
-        $response->header('X-Chat-Session-Id', $session_id);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'session_id' => strval($session_id),
+            'input' => $message
+        ]));
 
-        // Lưu ý quan trọng: Phải cho phép trình duyệt đọc Header này (CORS)
-        $response->header('Access-Control-Expose-Headers', 'X-Chat-Session-Id');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+        ]);
 
-        return $response;
+        // Hàm callback xử lý từng chunk dữ liệu trả về từ FastAPI
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $chunk) use (&$full_ai_response) {
+            $full_ai_response .= $chunk;
+
+            // Gửi chunk này về trình duyệt ngay lập tức
+            echo $chunk;
+
+            if (ob_get_level() > 0)
+                ob_flush();
+            flush();
+
+            return strlen($chunk);
+        });
+
+        curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // 6. Lưu câu trả lời hoàn chỉnh của AI vào DB
+        if ($http_code === 200 && !empty($full_ai_response)) {
+            save_ai_chat_message($session_id, 'assistant', $full_ai_response);
+        }
+
+        exit;
     }
 
 

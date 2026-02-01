@@ -139,7 +139,7 @@ class AIChat_Admin
     {
         $options = get_option('ai_chat_settings');
         $value = $options['ai_service_url'] ?? '';
-        echo '<input type="url" name="ai_chat_settings[ai_service_url]" value="' . esc_attr($value) . '" class="regular-text" placeholder="https://api.yourdomain.com">';
+        echo '<input type="text" name="ai_chat_settings[ai_service_url]" value="' . esc_attr($value) . '" class="regular-text" placeholder="https://api.yourdomain.com">';
         echo '<p class="description">Đường dẫn API trỏ tới dịch vụ FastAPI của bạn.</p>';
     }
 

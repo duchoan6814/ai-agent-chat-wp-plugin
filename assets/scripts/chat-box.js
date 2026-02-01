@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
   const $chatContent = $("#chat-content");
 
   // 3. Xử lý gửi tin nhắn
-  $("#send-btn").on("click", function () {
+  $("#send-btn").on("click", async function () {
     let message = $("#user-msg").val();
 
     if (message.trim() !== "") {
@@ -16,55 +16,55 @@ jQuery(document).ready(function ($) {
       // Cuộn xuống đáy khung chat
       $chatContent.scrollTop($chatContent[0].scrollHeight);
 
-      $.ajax({
-        url: aiChatSettings.root + "ai-chat/v1/send-message",
-        method: "POST",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader("X-WP-Nonce", aiChatSettings.nonce);
-          xhr.setRequestHeader("X-Visitor-ID", window.AIChatPlugin.visitorId);
-        },
-        data: {
-          message: message,
-          session_id: window.AIChatPlugin.currentSessionId || 0,
-        },
-        success: function (response, _, xhr) {
-          const sessionIdFromServer =
-            xhr.getResponseHeader("X-Chat-Session-Id");
+      try {
+        const response = await fetch(
+          aiChatSettings.root + "ai-chat/v1/send-message",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-WP-Nonce": aiChatSettings.nonce,
+              "X-Visitor-Id": window.AIChatPlugin.visitorId,
+            },
+            body: JSON.stringify({
+              message: message,
+              session_id: window.AIChatPlugin.currentSessionId || 0,
+            }),
+          },
+        );
 
-          // Cập nhật sessionId nếu server trả về
-          if (
-            sessionIdFromServer &&
-            !window.AIChatPlugin.currentSessionId
-          ) {
-            window.AIChatPlugin.currentSessionId =
-              parseInt(sessionIdFromServer);
-            console.log(
-              "Đã thiết lập Session ID từ server:",
-              window.AIChatPlugin.currentSessionId,
-            );
-          }
+        if (!response.ok) {
+          throw new Error("Không thể gửi tin nhắn!");
+        }
 
-          if (response.status === "success") {
-            $chatContent.append(
-              `<div class="message ai-msg">
-                  <div class="msg-bubble">${response?.data}</div>
-              </div>`,
-            );
-          }
-        },
-        error: function (error) {
-          $chatContent.append(
-            `<div class="message ai-msg">
-                  <div class="msg-bubble msg-error">${error.responseJSON.message || "Đã có lỗi xảy ra"}</div>
-              </div>`,
-          );
-        },
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
 
-        complete: function () {
-          // Cuộn xuống đáy khung chat
+        const $assistantTyping = $(`<div class="message ai-msg">
+                  <div class="msg-bubble"></div>
+              </div>`);
+
+        // Tạo một khung tin nhắn trống cho AI trước
+        let aiMsgDiv = $chatContent.append($assistantTyping);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+
+          // Cập nhật nội dung tin nhắn dần dần (Giả sử FastAPI trả về text thuần)
+          $assistantTyping.find(".msg-bubble").append(chunk);
+
           $chatContent.scrollTop($chatContent[0].scrollHeight);
-        },
-      });
+        }
+      } catch (error) {
+        $chatContent.append(
+          `<div class="message ai-msg">
+                  <div class="msg-bubble msg-error">${error?.message || "Đã có lỗi xảy ra"}</div>
+              </div>`,
+        );
+      }
     }
   });
 
