@@ -17,6 +17,13 @@ jQuery(document).ready(function ($) {
       $chatContent.scrollTop($chatContent[0].scrollHeight);
 
       try {
+        const $assistantTyping = $(`<div class="message ai-msg typing">
+                  <div class="msg-bubble">Đang trả lời...</div>
+              </div>`);
+
+        // Tạo một khung tin nhắn trống cho AI trước
+        $chatContent.append($assistantTyping);
+
         const response = await fetch(
           aiChatSettings.root + "ai-chat/v1/send-message",
           {
@@ -49,16 +56,17 @@ jQuery(document).ready(function ($) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
-        const $assistantTyping = $(`<div class="message ai-msg">
-                  <div class="msg-bubble"></div>
-              </div>`);
-
-        // Tạo một khung tin nhắn trống cho AI trước
-        let aiMsgDiv = $chatContent.append($assistantTyping);
+        let isReceivedFirstChunk = false;
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
+          if (!isReceivedFirstChunk) {
+            // Xóa trạng thái "Đang trả lời..." khi nhận được chunk đầu tiên
+            $assistantTyping.removeClass("typing");
+            $assistantTyping.find(".msg-bubble").html("");
+            isReceivedFirstChunk = true;
+          }
 
           const chunk = decoder.decode(value, { stream: true });
 
