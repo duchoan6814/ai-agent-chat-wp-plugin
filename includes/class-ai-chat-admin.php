@@ -5,6 +5,7 @@ class AIChat_Admin
     public function __construct()
     {
         add_action('admin_menu', array($this, 'register_menus'));
+        add_action('admin_init', [$this, 'register_settings_logic']);
     }
 
     public function register_menus()
@@ -49,6 +50,35 @@ class AIChat_Admin
             'manage_options',
             'ai-chat-settings',
             array($this, 'ai_chat_render_settings_page')
+        );
+    }
+
+    // Đăng ký các field với WordPress
+    public function register_settings_logic()
+    {
+        register_setting('ai_chat_settings_group', 'ai_chat_settings');
+
+        add_settings_section(
+            'ai_chat_main_section',
+            'Kết nối FastAPI Service',
+            null,
+            'ai-chat-settings-page'
+        );
+
+        add_settings_field(
+            'ai_service_url',
+            'AI Service URL',
+            [$this, 'url_field_callback'],
+            'ai-chat-settings-page',
+            'ai_chat_main_section'
+        );
+
+        add_settings_field(
+            'permanent_access_token',
+            'Permanent Access Token',
+            [$this, 'token_field_callback'],
+            'ai-chat-settings-page',
+            'ai_chat_main_section'
         );
     }
 
@@ -104,10 +134,26 @@ class AIChat_Admin
         <?php
     }
 
+    // Callbacks hiển thị ô nhập liệu
+    public function url_field_callback()
+    {
+        $options = get_option('ai_chat_settings');
+        $value = $options['ai_service_url'] ?? '';
+        echo '<input type="url" name="ai_chat_settings[ai_service_url]" value="' . esc_attr($value) . '" class="regular-text" placeholder="https://api.yourdomain.com">';
+        echo '<p class="description">Đường dẫn API trỏ tới dịch vụ FastAPI của bạn.</p>';
+    }
 
+    public function token_field_callback()
+    {
+        $options = get_option('ai_chat_settings');
+        $value = $options['permanent_access_token'] ?? '';
+        echo '<input type="password" name="ai_chat_settings[permanent_access_token]" value="' . esc_attr($value) . '" class="regular-text">';
+        echo '<p class="description">Token dùng để xác thực với FastAPI (X-API-Key hoặc Bearer).</p>';
+    }
 
     public function ai_chat_render_settings_page()
     {
-        echo '<div class="wrap"><h1>Cài đặt AI Chat</h1></div>';
+
+        include plugin_dir_path(__FILE__) . '../templates/admin-ai-chat-settings.php';
     }
 }
