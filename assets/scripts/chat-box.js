@@ -21,12 +21,29 @@ jQuery(document).ready(function ($) {
         method: "POST",
         beforeSend: function (xhr) {
           xhr.setRequestHeader("X-WP-Nonce", aiChatSettings.nonce);
+          xhr.setRequestHeader("X-Visitor-ID", window.AIChatPlugin.visitorId);
         },
         data: {
           message: message,
-          session_id: "1",
+          session_id: window.AIChatPlugin.currentSessionId || 0,
         },
-        success: function (response) {
+        success: function (response, _, xhr) {
+          const sessionIdFromServer =
+            xhr.getResponseHeader("X-Chat-Session-Id");
+
+          // Cập nhật sessionId nếu server trả về
+          if (
+            sessionIdFromServer &&
+            !window.AIChatPlugin.currentSessionId
+          ) {
+            window.AIChatPlugin.currentSessionId =
+              parseInt(sessionIdFromServer);
+            console.log(
+              "Đã thiết lập Session ID từ server:",
+              window.AIChatPlugin.currentSessionId,
+            );
+          }
+
           if (response.status === "success") {
             $chatContent.append(
               `<div class="message ai-msg">

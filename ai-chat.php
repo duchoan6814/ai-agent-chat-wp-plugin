@@ -9,7 +9,9 @@
  */
 
 
+require_once plugin_dir_path(__FILE__) . 'includes/utils.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-api-chat-ai.php';
+require_once plugin_dir_path(__FILE__) . 'includes/db-functions.php';
 
 
 add_action('wp_footer', 'ai_chat_render_html');
@@ -63,6 +65,8 @@ function ai_chat_create_table()
         id bigint(20) NOT NULL AUTO_INCREMENT,
         title varchar(255) DEFAULT 'Cuộc trò chuyện mới',
         user_id bigint(20) DEFAULT NULL,
+        visitor_fingerprint varchar(255) DEFAULT NULL,
+        is_active tinyint(1) DEFAULT 1,
         created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
@@ -85,3 +89,40 @@ function ai_chat_create_table()
 }
 
 add_action('rest_api_init', ['API_Chat_AI', 'register_routes']);
+
+add_action('admin_menu', 'ai_chat_plugin_admin_menu');
+
+function ai_chat_plugin_admin_menu()
+{
+    // 1. Tạo Menu Chính (Parent)
+    add_menu_page(
+        'AI Chat Dashboard',         // Tiêu đề trang
+        'AI Chat AI',                // Tên menu hiển thị
+        'manage_options',            // Quyền hạn
+        'ai-chat-main',              // Menu Slug (ID của menu chính)
+        'ai_chat_render_main_page',  // Hàm hiển thị trang tổng quan
+        'dashicons-format-chat',     // Icon
+        25
+    );
+
+    // Sửa tên menu con đầu tiên (trùng slug với menu cha)
+    add_submenu_page(
+        'ai-chat-main',
+        'Danh sách hội thoại',
+        'Lịch sử Chat',
+        'manage_options',
+        'ai-chat-main', // Trùng slug với cha
+        'ai_chat_render_main_page'
+    );
+
+
+    // 3. Tạo Submenu: Cấu hình (Settings)
+    add_submenu_page(
+        'ai-chat-main',
+        'Cấu hình AI',
+        'Cài đặt',
+        'manage_options',
+        'ai-chat-settings',
+        'ai_chat_render_settings_page'
+    );
+}
