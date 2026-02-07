@@ -1,5 +1,5 @@
 /* assets/style.css */
-.ai-chat-container {
+#ai-chat-window.ai-chat-container {
   position: fixed;
   bottom: 90px;
   right: 20px;
@@ -18,7 +18,7 @@
 }
 
 /* 1. Header Styles */
-.chat-header {
+#ai-chat-window .chat-header {
   background: var(--primary-color);
   color: var(--background-color);
   padding: 15px;
@@ -27,29 +27,29 @@
   align-items: center;
 }
 
-.header-info {
+#ai-chat-window .header-info {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.status-dot {
+#ai-chat-window.status-dot {
   width: 8px;
   height: 8px;
   background: var(--color-success);
   border-radius: 50%;
 }
-.chat-title {
+#ai-chat-window .chat-title {
   font-weight: 600;
   font-size: 16px;
 }
 
-.header-actions {
+#ai-chat-window .header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.create-session-btn {
+#ai-chat-window .create-session-btn {
   background: transparent;
   border: none;
   color: var(--background-color);
@@ -60,11 +60,11 @@
   align-items: center;
   justify-content: center;
 }
-.create-session-btn:hover {
+#ai-chat-window .create-session-btn:hover {
   opacity: 1;
 }
 
-.close-btn {
+#ai-chat-window .close-btn {
   background: transparent;
   border: none;
   color: var(--background-color);
@@ -72,12 +72,12 @@
   cursor: pointer;
   opacity: 0.8;
 }
-.close-btn:hover {
+#ai-chat-window .close-btn:hover {
   opacity: 1;
 }
 
 /* 2. Body Styles */
-.chat-body {
+#ai-chat-window .chat-body {
   flex: 1;
   padding: 15px;
   overflow-y: auto;
@@ -87,7 +87,7 @@
   gap: 10px;
 }
 
-.msg-bubble {
+#ai-chat-window .msg-bubble {
   max-width: 80%;
   padding: 10px 14px;
   border-radius: 15px;
@@ -95,24 +95,24 @@
   line-height: 1.4;
 }
 
-.message {
+#ai-chat-window .message {
   display: flex;
   flex-direction: column;
 }
 
-.ai-msg .msg-bubble {
+#ai-chat-window .ai-msg .msg-bubble {
   background: var(--color-gray-200);
   color: var(--foreground-color);
   align-self: flex-start;
   border-bottom-left-radius: 2px;
 }
 
-.ai-msg .msg-bubble.msg-error {
+#ai-chat-window .ai-msg .msg-bubble.msg-error {
   color: var(--error-foreground-color);
   background-color: var(--error-background-color);
 }
 
-.user-msg .msg-bubble {
+#ai-chat-window .user-msg .msg-bubble {
   background: var(--primary-color);
   color: var(--background-color);
   align-self: flex-end;
@@ -120,13 +120,13 @@
 }
 
 /* 3. Footer Styles */
-.chat-footer {
+#ai-chat-window .chat-footer {
   padding: 12px;
   background: var(--background-color);
   border-top: 1px solid var(--color-gray-200);
 }
 
-.input-wrapper {
+#ai-chat-window .input-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -136,7 +136,7 @@
   border-radius: 9999px;
 }
 
-#user-msg {
+#ai-chat-window #user-msg  {
   flex: 1;
   border: none;
   background: transparent;
@@ -147,17 +147,17 @@
   max-height: 100px;
 }
 
-.attach-btn {
+#ai-chat-window .attach-btn {
   color: var(--color-gray-500);
   cursor: pointer;
   display: flex;
   align-items: center;
 }
-.attach-btn:hover {
+#ai-chat-window .attach-btn:hover {
   color: var(--primary-color);
 }
 
-.send-btn {
+#ai-chat-window .send-btn {
   background: var(--primary-color);
   border: none;
   border-radius: 50%;
@@ -170,7 +170,7 @@
   transition: transform 0.2s;
 }
 
-.send-btn:hover {
+#ai-chat-window .send-btn:hover {
   transform: scale(1.1);
   background: var(--primary-color);
 }

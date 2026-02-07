@@ -34,7 +34,7 @@ function ai_chat_render_html()
 }
 
 // Nhúng file CSS và JS
-add_action('wp_enqueue_scripts', 'ai_chat_enqueue_assets');
+add_action('wp_enqueue_scripts', 'ai_chat_enqueue_assets', 20);
 function ai_chat_enqueue_assets()
 {
     wp_enqueue_style('ai-chat-vars', plugins_url('assets/css/variables.css', __FILE__));
