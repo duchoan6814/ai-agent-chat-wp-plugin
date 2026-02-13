@@ -1,4 +1,4 @@
-#ai-chat-button {
+#ai-agent-chat #ai-chat-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -15,11 +15,11 @@
   transition: transform 0.3s ease-in-out;
 }
 
-#ai-chat-button:active {
+#ai-agent-chat #ai-chat-button:active {
   transform: scale(0.8);
 }
 
-#ai-chat-button img {
+#ai-agent-chat #ai-chat-button img {
   width: 30px;
   height: 30px;
 }

@@ -8,8 +8,8 @@ jQuery(document).ready(function ($) {
 
     if (message.trim() !== "") {
       // Hiển thị tin nhắn người dùng
-      $chatContent.append(`<div class="message user-msg">
-            <div class="msg-bubble">${message}</div>
+      $chatContent.append(`<div class="ht-agent__message ht-agent__user-msg">
+            <div class="ht-agent__msg-bubble">${message}</div>
         </div>`);
       $("#user-msg").val(""); // Xóa ô input
 
@@ -17,8 +17,8 @@ jQuery(document).ready(function ($) {
       $chatContent.scrollTop($chatContent[0].scrollHeight);
 
       try {
-        const $assistantTyping = $(`<div class="message ai-msg typing">
-                  <div class="msg-bubble">Đang trả lời...</div>
+        const $assistantTyping = $(`<div class="ht-agent__message ht-agent__ai-msg ht-agent__typing">
+                  <div class="ht-agent__msg-bubble">Đang trả lời...</div>
               </div>`);
 
         // Tạo một khung tin nhắn trống cho AI trước
@@ -63,22 +63,22 @@ jQuery(document).ready(function ($) {
           if (done) break;
           if (!isReceivedFirstChunk) {
             // Xóa trạng thái "Đang trả lời..." khi nhận được chunk đầu tiên
-            $assistantTyping.removeClass("typing");
-            $assistantTyping.find(".msg-bubble").html("");
+            $assistantTyping.removeClass("ht-agent__typing");
+            $assistantTyping.find(".ht-agent__msg-bubble").html("");
             isReceivedFirstChunk = true;
           }
 
           const chunk = decoder.decode(value, { stream: true });
 
           // Cập nhật nội dung tin nhắn dần dần (Giả sử FastAPI trả về text thuần)
-          $assistantTyping.find(".msg-bubble").append(chunk);
+          $assistantTyping.find(".ht-agent__msg-bubble").append(chunk);
 
           $chatContent.scrollTop($chatContent[0].scrollHeight);
         }
       } catch (error) {
         $chatContent.append(
-          `<div class="message ai-msg">
-                  <div class="msg-bubble msg-error">${error?.message || "Đã có lỗi xảy ra"}</div>
+          `<div class="ht-agent__message ht-agent__ai-msg">
+                  <div class="ht-agent__msg-bubble ht-agent__msg-error">${error?.message || "Đã có lỗi xảy ra"}</div>
               </div>`,
         );
       }

@@ -1,5 +1,5 @@
 /* assets/style.css */
-#ai-chat-window.ai-chat-container {
+#ai-agent-chat #ai-chat-window.ai-chat-container {
   position: fixed;
   bottom: 90px;
   right: 20px;
@@ -18,7 +18,7 @@
 }
 
 /* 1. Header Styles */
-#ai-chat-window .chat-header {
+#ai-agent-chat #ai-chat-window .ht-agent__chat-header {
   background: var(--primary-color);
   color: var(--background-color);
   padding: 15px;
@@ -27,29 +27,29 @@
   align-items: center;
 }
 
-#ai-chat-window .header-info {
+#ai-agent-chat #ai-chat-window .ht-agent__header-info {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-#ai-chat-window.status-dot {
+#ai-agent-chat #ai-chat-window .ht-agent__status-dot {
   width: 8px;
   height: 8px;
   background: var(--color-success);
   border-radius: 50%;
 }
-#ai-chat-window .chat-title {
+#ai-agent-chat #ai-chat-window .ht-agent__chat-title {
   font-weight: 600;
   font-size: 16px;
 }
 
-#ai-chat-window .header-actions {
+#ai-agent-chat #ai-chat-window .ht-agent__header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-#ai-chat-window .create-session-btn {
+#ai-agent-chat #ai-chat-window .ht-agent__create-session-btn {
   background: transparent;
   border: none;
   color: var(--background-color);
@@ -60,24 +60,27 @@
   align-items: center;
   justify-content: center;
 }
-#ai-chat-window .create-session-btn:hover {
+#ai-agent-chat #ai-chat-window .ht-agent__create-session-btn:hover {
   opacity: 1;
 }
 
-#ai-chat-window .close-btn {
+#ai-agent-chat #ai-chat-window .ht-agent__close-btn {
   background: transparent;
   border: none;
   color: var(--background-color);
   font-size: 24px;
   cursor: pointer;
   opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-#ai-chat-window .close-btn:hover {
+#ai-agent-chat #ai-chat-window .ht-agent__close-btn:hover {
   opacity: 1;
 }
 
 /* 2. Body Styles */
-#ai-chat-window .chat-body {
+#ai-agent-chat #ai-chat-window .ht-agent__chat-body {
   flex: 1;
   padding: 15px;
   overflow-y: auto;
@@ -87,7 +90,7 @@
   gap: 10px;
 }
 
-#ai-chat-window .msg-bubble {
+#ai-agent-chat #ai-chat-window .ht-agent__msg-bubble {
   max-width: 80%;
   padding: 10px 14px;
   border-radius: 15px;
@@ -95,24 +98,27 @@
   line-height: 1.4;
 }
 
-#ai-chat-window .message {
+#ai-agent-chat #ai-chat-window .ht-agent__message {
   display: flex;
   flex-direction: column;
 }
 
-#ai-chat-window .ai-msg .msg-bubble {
+#ai-agent-chat #ai-chat-window .ht-agent__ai-msg .ht-agent__msg-bubble {
   background: var(--color-gray-200);
   color: var(--foreground-color);
   align-self: flex-start;
   border-bottom-left-radius: 2px;
 }
 
-#ai-chat-window .ai-msg .msg-bubble.msg-error {
+#ai-agent-chat
+  #ai-chat-window
+  .ht-agent__ai-msg
+  .ht-agent__msg-bubble.ht-agent__msg-error {
   color: var(--error-foreground-color);
   background-color: var(--error-background-color);
 }
 
-#ai-chat-window .user-msg .msg-bubble {
+#ai-agent-chat #ai-chat-window .ht-agent__user-msg .ht-agent__msg-bubble {
   background: var(--primary-color);
   color: var(--background-color);
   align-self: flex-end;
@@ -120,13 +126,13 @@
 }
 
 /* 3. Footer Styles */
-#ai-chat-window .chat-footer {
+#ai-agent-chat #ai-chat-window .ht-agent__chat-footer {
   padding: 12px;
   background: var(--background-color);
   border-top: 1px solid var(--color-gray-200);
 }
 
-#ai-chat-window .input-wrapper {
+#ai-agent-chat #ai-chat-window .ht-agent__input-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -136,7 +142,7 @@
   border-radius: 9999px;
 }
 
-#ai-chat-window #user-msg  {
+#ai-agent-chat #ai-chat-window #user-msg.ht-agent__user-msg {
   flex: 1;
   border: none;
   background: transparent;
@@ -147,17 +153,17 @@
   max-height: 100px;
 }
 
-#ai-chat-window .attach-btn {
+#ai-agent-chat #ai-chat-window .ht-agent__attach-btn {
   color: var(--color-gray-500);
   cursor: pointer;
   display: flex;
   align-items: center;
 }
-#ai-chat-window .attach-btn:hover {
+#ai-agent-chat #ai-chat-window .ht-agent__attach-btn:hover {
   color: var(--primary-color);
 }
 
-#ai-chat-window .send-btn {
+#ai-agent-chat #ai-chat-window .ht-agent__send-btn {
   background: var(--primary-color);
   border: none;
   border-radius: 50%;
@@ -170,7 +176,7 @@
   transition: transform 0.2s;
 }
 
-#ai-chat-window .send-btn:hover {
+#ai-agent-chat #ai-chat-window .ht-agent__send-btn:hover {
   transform: scale(1.1);
   background: var(--primary-color);
 }

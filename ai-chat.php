@@ -21,25 +21,22 @@ function ai_chat_render_html()
 
     $include_path = plugin_dir_path(__FILE__);
 
-    // Load button template
-    if (file_exists($include_path . 'templates/button.php')) {
-        include $include_path . 'templates/button.php';
-    }
-
-    // Load chat box template
-    if (file_exists($include_path . 'templates/box-chat.php')) {
-        include $include_path . 'templates/box-chat.php';
+    // Load container template
+    if (file_exists($include_path . 'templates/container.php')) {
+        include $include_path . 'templates/container.php';
     }
 
 }
 
+
 // Nhúng file CSS và JS
-add_action('wp_enqueue_scripts', 'ai_chat_enqueue_assets', 20);
+add_action('wp_enqueue_scripts', 'ai_chat_enqueue_assets', 999);
 function ai_chat_enqueue_assets()
 {
     wp_enqueue_style('ai-chat-vars', plugins_url('assets/css/variables.css', __FILE__));
-    wp_enqueue_style('ai-chat-style', plugins_url('assets/css/style.css', __FILE__), array('ai-chat-vars'));
-    wp_enqueue_style('ai-chat-chat-box-style', plugins_url('assets/css/chat-box.css', __FILE__), array('ai-chat-vars'));
+    wp_enqueue_style("ai-chat-reset-style", plugins_url('assets/css/reset-theme.css', __FILE__), array('ai-chat-vars'));
+    wp_enqueue_style('ai-chat-style', plugins_url('assets/css/style.css', __FILE__), array('ai-chat-vars', 'ai-chat-reset-style'));
+    wp_enqueue_style('ai-chat-chat-box-style', plugins_url('assets/css/chat-box.css', __FILE__), array('ai-chat-vars', 'ai-chat-reset-style'));
 
     wp_enqueue_script('fingerprintjs', plugins_url('assets/scripts/fingerprint.min.js', __FILE__), array(), '5.0.1', true);
     wp_enqueue_script('init-fingerprint-script', plugins_url('assets/scripts/figerprint-init.js', __FILE__), array('jquery', 'fingerprintjs'), '1.0', true);

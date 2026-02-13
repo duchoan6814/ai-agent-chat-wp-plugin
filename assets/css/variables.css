@@ -14,3 +14,9 @@
 
   --color-success: #20c153;
 }
+
+[class*="ht-agent"] * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
